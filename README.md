@@ -42,7 +42,12 @@ docker images
 
 ###  Run the container
 
-docker run -p 9000:8000 task-api:latest
+docker run -p 8000:8000 task-api:latest
+
+If you want your application to run with custom port (for ex: 9000)  
+
+docker run -p 9000:9000 -e APP_PORT=9000 task-api
+
 
 ### Validation
  http://localhost:8000/tasks
@@ -104,6 +109,56 @@ Terraform will:
 ✔ Deploy Helm chart
 ✔ Apply your image which you have pushed to GHCR already through workflow)
 
+### Validation:
+
+✅ 1. Validate the Kubernetes Cluster
+Run:
+kubectl cluster-info
+
+kubectl get nodes
+
+Expected:
+•	1 server + 1 agent node (or whatever you configured)
+•	Status: Ready
+
+✅ 2. Confirm Namespace Exists
+kubectl get ns
+You should see:
+task-api
+
+✅ 3. Check Helm Release
+helm list -n task-api
+Expected output:
+NAME      	NAMESPACE 	REVISION	STATUS  	CHART
+taskapi   	task-api  	1       	deployed	taskapi-0.1.0
+
+✅ 4. Validate Deployment
+kubectl get deployments -n task-api
+kubectl describe deployment taskapi -n task-api
+Expected:
+•	Deployment should show AVAILABLE = 1
+
+✅ 5. Validate Pod is Running
+kubectl get pods -n task-api
+Expected:
+taskapi-xxxxxx   Running
+If Running → success 🎉
+
+✅ 6. Validate Service
+kubectl get svc -n task-api
+You should see a ClusterIP service:
+taskapi   ClusterIP   10.x.x.x   <none>        8000/TCP
+Since it is ClusterIP, it is internal only.
+To test the API, you must port-forward.
+
+✅ 7. Test the API via Port Forward
+Run:
+kubectl port-forward svc/taskapi 8000:8000 -n task-api
+
+To test it using different custom port,
+
+kubectl port-forward svc/taskapi 9000:8000 -n task-api
+
 ## Helm Configuration Explanation
 
 values.yaml contains:  
@@ -121,6 +176,8 @@ You can override the image and port details by updating values.dev.yaml file
 ## Assumptions & Limitations
 - Tasks are stored in memory only (no database persistence).
 - Service is exposed internally (ClusterIP);
+- ClusterIP service type is not externally accessible unless you port-forward.
+- The container image is assumed to be publicly accessible (GHCR or Docker Hub).
 
 ## Design Decisions
  - FastAPI : high performancd, automatic data validation through pandatic , documentation genaration(Swagger UI)  
