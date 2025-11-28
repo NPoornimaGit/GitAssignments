@@ -1,14 +1,14 @@
 # Task API — Kubernetes Deployment with Terraform + Helm
   
-### Prerequisites
+## Prerequisites
 
 Install the following tools before running anything:  
-    1. Docker Desktop  
-    2. Terraform  
-    3. k3d  
-    4. helm  
-    5. kubectl  
-    6. Python 3.11+  
+    - Docker Desktop  
+    - Terraform  
+    - k3d  
+    - helm  
+    - kubectl  
+    - Python 3.11+  
 
 
 ### Create a folder 'Task-API-Service' in your local and navigate to that directory
@@ -19,35 +19,35 @@ cd Task-API-Service
 
 git clone https://github.com/PoornimaN-Personal/Task-API-Service.git
 
-### Run Tests Locally
+## Run Tests Locally
 
-## Install dependencies
+### Install dependencies
 
 pip install -r src/requirements.txt
 
-## Run tests
+### Run tests
 
 pytest
 
 This will resturn "Passed" status for the test cases. you can tweek the code and make the testcase fail if you want to check.
 
-### Build & Run the API Using Docker
+## Build & Run the API Using Docker
 
-## Build the Docker image
+### Build the Docker image
 
 docker build -t task-api:latest .
 
 Check if the image created  
 docker images  
 
-## Run the container
+###  Run the container
 
 docker run -p 9000:8000 task-api:latest
 
-## Validation
+### Validation
  http://localhost:8000/tasks
 
- # Expected:
+ ### Expected:
  
 •	/tasks returns []
 
@@ -75,10 +75,64 @@ This PUSH request will automatically trigger workflow and it will test, build an
 Go to Actions --> You can see the workflow is running. Once it is finished    
 Go to Package --> Chack if A new image with the name "task-api" is available  
 
-# Note: Ensure that you have write permission to write package   
+### Note: Ensure that you have write permission to write package   
 
 Settings --> Actions --> general --> Workflow Permission  
-Enable Read & Write permissions  
+Enable Read & Write permissions 
+
+## Terraform to deploy application 
+
+Terraform configuration will do the following,
+
+● Provision k3d Kubernetes cluster.
+● Create a dedicated namespace for the application.
+● Deploy the application using the Terraform Helm provider.
+
+Navigate to terraform folder where we have the configuration files
+
+cd Task-API-Servic/terraform
+
+### Apply terraform
+
+terraform init  
+terraform apply --auto-approve
+
+Terraform will:
+
+✔ Create cluster 
+✔ Create namespace task-api
+✔ Deploy Helm chart
+✔ Apply your image which you have pushed to GHCR already through workflow)
+
+## Helm Configuration Explanation
+
+values.yaml contains:  
+
+Key values in helm/values.yaml:
+- replicaCount: number of API replicas
+- image.repository: container image repository
+- image.tag: image version tag
+- service.port: port exposed by the Kubernetes Service
+- 
+Override with values.dev.yaml for local/dev environments.
+
+You can override the image and port details by updating values.dev.yaml file
+
+## Assumptions & Limitations
+- Tasks are stored in memory only (no database persistence).
+- Service is exposed internally (ClusterIP);
+
+## Design Decisions
+ - FastAPI : high performancd, automatic data validation through pandatic , documentation genaration(Swagger UI)  
+ - k3d cluster: Fast, simple and no cost 
+ - GHCR: Easiest when compared to Docker Hub (No Extra accounts & No extra secrets needed. We can use the in-built ${{ secrets.GITHUB_TOKEN }}
+
+## Use of AI
+
+
+
+
+
 
 
 
