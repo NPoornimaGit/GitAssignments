@@ -27,7 +27,7 @@ pip install -r src/requirements.txt
 
 ### Run tests
 
-pytest
+pytest -v
 
 This will resturn "Passed" status for the test cases. you can tweek the code and make the testcase fail if you want to check.
 
