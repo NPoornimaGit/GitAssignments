@@ -100,11 +100,23 @@ cd Task-API-Servic/terraform
 ### Apply terraform
 
 terraform init  
+
+When Terraform loads providers (Kubernetes/Helm), it needs kubeconfig at init time.  
+But the kubeconfig file is only created after the cluster exists.  
+So we should follow 2-phase terraform apply
+1. Phase 1 → cluster comes up & kubeconfig file is created  
+Phase 2 → providers can use the kubeconfig
+
+terraform apply -target="k3d_cluster.taskapi" -target="data.k3d_cluster.taskapi" -target="local_file.kubeconfig"  
+
 terraform apply --auto-approve
 
 Terraform will:
-
+Phase 1
 ✔ Create cluster 
+✔ read the cluster
+✔ write the kubeconfig file
+Phase 2
 ✔ Create namespace task-api
 ✔ Deploy Helm chart
 ✔ Apply your image which you have pushed to GHCR already through workflow)
