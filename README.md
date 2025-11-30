@@ -89,13 +89,18 @@ Enable Read & Write permissions
 
 Terraform configuration will do the following,
 
-● Provision k3d Kubernetes cluster.
+● Provision eks Kubernetes cluster.
 ● Create a dedicated namespace for the application.
 ● Deploy the application using the Terraform Helm provider.
 
 Navigate to terraform folder where we have the configuration files
 
 cd Task-API-Servic/terraform
+
+### COnfigure AWS Account 
+aws configure
+
+give your access key and secret key details
 
 ### Apply terraform
 
