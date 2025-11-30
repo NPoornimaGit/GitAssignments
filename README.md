@@ -165,11 +165,11 @@ To test the API, you must port-forward.
 
 ✅ 7. Test the API via Port Forward
 Run:
-kubectl port-forward svc/taskapi 8000:8000 -n task-api
+kubectl port-forward svc/task-api 8000:8000 -n task-api
 
 To test it using different custom port,
 
-kubectl port-forward svc/taskapi 9000:8000 -n task-api
+kubectl port-forward svc/task-api 9000:8000 -n task-api
 
 ## Helm Configuration Explanation
 
