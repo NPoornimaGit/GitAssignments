@@ -20,6 +20,8 @@ cd Task-API-Service
 
 git clone https://github.com/PoornimaN-Personal/Task-API-Service.git
 
+cd cd Task-API-Service
+
 ## Run Tests Locally
 
 ### Install dependencies
