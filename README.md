@@ -127,7 +127,9 @@ Phase 2
 ✔ Apply your image which you have pushed to GHCR already through workflow)
 
 ### Validation:
+Once cluster is created
 
+aws eks update-kubeconfig --name taskapi-cluster --region ap-southeast-2 
 ✅ 1. Validate the Kubernetes Cluster
 Run:
 kubectl cluster-info
@@ -175,6 +177,11 @@ kubectl port-forward svc/task-api 8000:8000 -n task-api
 To test it using different custom port,
 
 kubectl port-forward svc/task-api 9000:8000 -n task-api
+
+
+## Terraform destroy
+
+terraform destroy
 
 ## Helm Configuration Explanation
 
