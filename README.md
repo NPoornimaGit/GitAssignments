@@ -3,7 +3,8 @@
 ## Prerequisites
 
 Install the following tools before running anything:  
-    - Docker Desktop  
+    - Docker Desktop 
+    - aws cli
     - Terraform  
     - k3d  
     - helm  
