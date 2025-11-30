@@ -72,11 +72,8 @@ Now if you access 👉 http://localhost:8000/tasks , you can see the list which 
 Assumption:
 create one test repository and push the code from your local to GIT.   
 As per CI.yaml file , the workflow will get triggered automatically upon push/pull request.  
-git init  
-git add .  
-git commit -m "Initial Commit"    
-git branch -m main  
-git remote add origin https://github.com/<your-user-name>/<repo-name>/.git  
+git remote set-url origin https://github.com/MathanrajN/TestEKS.git  
+git branch -M main  
 git push -u origin main  
 
 This PUSH request will automatically trigger workflow and it will test, build and push the package to GHCR.  
