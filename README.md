@@ -98,8 +98,8 @@ docker run -p <port>:<port> -e APP_PORT=<port> task-api
 >
 > Repeat the API testing at `http://localhost:<port>/docs`
 
-> [!Note]
-> After testing, stop and remove the container with `docker stop` and `docker rm`, then remove the image with `docker rmi` to free up space.
+> [!Important]
+> After this step, stop and remove the container with `docker stop` and `docker rm`, then remove the image with `docker rmi`.
 
 
 ## GitHub CI Validation:
@@ -245,6 +245,7 @@ You can override the image and port details by updating values.dev.yaml file
 - Service is exposed internally (ClusterIP);
 - ClusterIP service type is not externally accessible unless you port-forward.
 - The container image is assumed to be publicly accessible (GHCR or Docker Hub).
+- Terraform state files are stored locaaly, no backend configuration
 
 ## Design Decisions
  - FastAPI : high performancd, automatic data validation through pandatic , documentation genaration(Swagger UI)  
