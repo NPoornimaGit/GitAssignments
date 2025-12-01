@@ -156,6 +156,10 @@ Terraform configuration will do the following,
 ```
   cd Task-API-Service/terraform
 ```
+- Update `values_override.yaml.tpl` file - **Optional**
+    - By default it will pick up the image from the repository `ghcr.io/poorniman-personal/task-api`
+    - You can update `${image_repo}` and `${image_tag}`  with the image which we published to GHCR in the [GitHub CI Validation](#github-ci-validation) section
+        - For Example `ghcr.io/<your-git-username>/task-api`
 - Initialize Terraform  
 ```
   terraform init
