@@ -125,8 +125,8 @@ git push -u origin main
 
 > [!Note]
 > In case if workflow fails, then please enssure you have write permission to write package  
-> Go to **Settings --> Actions --> general --> Workflow Permission**    
-> Then **Enable Read & Write permissions**
+> - Go to **Settings --> Actions --> General --> Workflow Permission**    
+> - [x] **Enable Read & Write permissions**
 
 ## Terraform to deploy application 
 
