@@ -1,5 +1,35 @@
 # Task API — Kubernetes Deployment with Terraform + Helm
-  
+
+## Assumptions & Limitations
+
+- **Tasks are stored in memory only**    
+   - No database persistence is implemented. All tasks will be lost when the application restarts.  
+- **Service exposure**  
+    - The application is exposed internally using a ClusterIP service type.  
+    - ClusterIP services are not externally accessible unless you use `kubectl port-forward` or configure an ingress/load balancer.  
+- **Container image availability**  
+    - The Docker image is assumed to be publicly accessible (via GHCR or Docker Hub).  
+    - Private registry authentication is not covered in this setup.  
+- **Terraform state management**  
+    - Terraform state files are stored locally.  
+    - No remote backend configuration (e.g., S3 + DynamoDB) is included in this project.  
+    - This means state is not shared across team members and must be managed manually.  
+
+## Design Decisions
+ - **FastAPI:**
+     - High Performance
+     - Automatic data validation through Pydantic models
+     - Interactive documentation genaration(Swagger UI)  
+ - **EKS cluster:**
+     - Amazon EKS is a fully managed, production‑ready Kubernetes service.  
+     - Though EKS incurs charges, I chose EKS cluster over a k3d cluster because:  
+         - The k3d Terraform provider is not actively maintained and outdated, leading to issues.  
+         - Running k3d with Terraform on Windows typically requires WSL2 setup for proper integration, which adds extra complexity and environment dependencies.  
+ - **GHCR:**
+     - Easiest when compared to Docker Hub
+     - No Extra accounts or Secrets needed.
+     - Built-in authentication using ${{ secrets.GITHUB_TOKEN }}
+       
 ## Prerequisites
 
  - Before you begin, make sure the following tools are installed and available:  
@@ -131,6 +161,19 @@ git push -u origin main
 > - Go to **Settings --> Actions --> General --> Workflow Permission**    
 > - [x] **Enable Read & Write permissions**
 
+## Helm Configuration Explanation
+
+Key values in helm/values.yaml:
+
+| Key    | Purpose |
+| -------- | ------- |
+| replicaCount  | Number of API replicas    |
+| image.repository | Container image repository   |
+| image.tag    | Image version tag  |
+| service.port  | Port exposed by the Kubernetes Service |
+
+You can override these details by updating values.dev.yaml file  
+
 ## Terraform to deploy app  
 
 Terraform configuration will do the following,  
@@ -156,7 +199,10 @@ Terraform configuration will do the following,
 ```
   cd Task-API-Service/terraform
 ```
-- Update `values_override.yaml.tpl` file - **Optional**
+- Review and Update `terraform.tfvars` file - **Optional**
+    - This file contains project‑specific variables such as  `aws_region`   `cluster_name`   `namespace`
+      
+- Review and Update `values_override.yaml.tpl` file - **Optional**
     - By default it will pick up the image from the repository `ghcr.io/poorniman-personal/task-api`
     - You can update `${image_repo}` and `${image_tag}`  with the image which we published to GHCR in the [GitHub CI Validation](#github-ci-validation) section
         - For Example `ghcr.io/<your-git-username>/task-api`
@@ -247,48 +293,6 @@ terraform destroy
 - Type yes when prompted.  
 > ✔️ This command will remove all AWS resources created by your Terraform configuration (EKS cluster, VPC, subnets,helm deployment etc.)
 
-## Helm Configuration Explanation
-
-Key values in helm/values.yaml:
-
-| Key    | Purpose |
-| -------- | ------- |
-| replicaCount  | number of API replicas    |
-| image.repository | container image repository   |
-| image.tag    | image version tag  |
-| service.port  | Port exposed by the Kubernetes Service |
-
-You can override these details by updating values.dev.yaml file
-
-## Assumptions & Limitations
-
-- **Tasks are stored in memory only**    
-   - No database persistence is implemented. All tasks will be lost when the application restarts.  
-- **Service exposure**  
-    - The application is exposed internally using a ClusterIP service type.  
-    - ClusterIP services are not externally accessible unless you use `kubectl port-forward` or configure an ingress/load balancer.  
-- **Container image availability**  
-    - The Docker image is assumed to be publicly accessible (via GHCR or Docker Hub).  
-    - Private registry authentication is not covered in this setup.  
-- **Terraform state management**  
-    - Terraform state files are stored locally.  
-    - No remote backend configuration (e.g., S3 + DynamoDB) is included in this project.  
-    - This means state is not shared across team members and must be managed manually.  
-
-## Design Decisions
- - **FastAPI:**
-     - High Performance
-     - Automatic data validation through Pydantic models
-     - Interactive documentation genaration(Swagger UI)  
- - **EKS cluster:**
-     - Amazon EKS is a fully managed, production‑ready Kubernetes service.  
-     - Though EKS incurs charges, I chose EKS cluster over a k3d cluster because:  
-         - The k3d Terraform provider is not actively maintained and outdated, leading to issues.  
-         - Running k3d with Terraform on Windows typically requires WSL2 setup for proper integration, which adds extra complexity and environment dependencies.  
- - **GHCR:**
-     - Easiest when compared to Docker Hub
-     - No Extra accounts or Secrets needed.
-     - Built-in authentication using ${{ secrets.GITHUB_TOKEN }}
 
 ## Use of AI
 
