@@ -11,7 +11,10 @@
     - Terraform  
     - Helm  
     - kubectl  
-    - Python 3.11+  
+    - Python 3.11+
+> [!WARNING]
+> **Do not use the AWS root account. Always use IAM user with required permissions.**
+
 
 ## Run Tests Locally
  - Open terminal
@@ -242,29 +245,46 @@ terraform destroy
 
 ## Helm Configuration Explanation
 
-values.yaml contains:  
-
 Key values in helm/values.yaml:
-- replicaCount: number of API replicas
-- image.repository: container image repository
-- image.tag: image version tag
-- service.port: port exposed by the Kubernetes Service
-- 
-Override with values.dev.yaml for local/dev environments.
 
-You can override the image and port details by updating values.dev.yaml file
+| Key    | Purpose |
+| -------- | ------- |
+| replicaCount  | number of API replicas    |
+| image.repository | container image repository   |
+| image.tag    | image version tag  |
+| service.port  | Port exposed by the Kubernetes Service |
+
+You can override these details by updating values.dev.yaml file
 
 ## Assumptions & Limitations
-- Tasks are stored in memory only (no database persistence).
-- Service is exposed internally (ClusterIP);
-- ClusterIP service type is not externally accessible unless you port-forward.
-- The container image is assumed to be publicly accessible (GHCR or Docker Hub).
-- Terraform state files are stored locaaly, no backend configuration
+
+- **Tasks are stored in memory only**    
+   - No database persistence is implemented. All tasks will be lost when the application restarts.  
+- **Service exposure**  
+    - The application is exposed internally using a ClusterIP service type.  
+    - ClusterIP services are not externally accessible unless you use `kubectl port-forward` or configure an ingress/load balancer.  
+- **Container image availability**  
+    - The Docker image is assumed to be publicly accessible (via GHCR or Docker Hub).  
+    - Private registry authentication is not covered in this setup.  
+- **Terraform state management**  
+    - Terraform state files are stored locally.  
+    - No remote backend configuration (e.g., S3 + DynamoDB) is included in this project.  
+    - This means state is not shared across team members and must be managed manually.  
 
 ## Design Decisions
- - FastAPI : high performancd, automatic data validation through pandatic , documentation genaration(Swagger UI)  
- - k3d cluster: Fast, simple and no cost 
- - GHCR: Easiest when compared to Docker Hub (No Extra accounts & No extra secrets needed. We can use the in-built ${{ secrets.GITHUB_TOKEN }}
+ - **FastAPI:**
+     - High Performance
+     - Automatic data validation through Pydantic models
+     - Interactive documentation genaration(Swagger UI)  
+ - **EKS cluster:**
+     - Amazon EKS is a fully managed, production‑ready Kubernetes service.  
+     - Though EKS incurs charges, I chose EKS cluster over a k3d cluster because:  
+         - The k3d Terraform provider is not actively maintained and outdated, leading to issues.  
+         - Running k3d with Terraform on Windows typically requires WSL2 setup for proper integration, which adds extra complexity and environment dependencies.  
+ - **GHCR:**
+     - Easiest when compared to Docker Hub
+     - No Extra accounts or Secrets needed.
+     - Built-in authentication using ${{ secrets.GITHUB_TOKEN }}
 
 ## Use of AI
 
