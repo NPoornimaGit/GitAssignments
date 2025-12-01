@@ -2,88 +2,131 @@
   
 ## Prerequisites
 
-Install the following tools before running anything:  
-    - Docker Desktop -- Should be in running state
-    - aws cli
+ - Before you begin, make sure the following tools are installed and available:  
+    - Docker Desktop - **Must be installed and Running**
+    - Git
+    - AWS Account
+    - IAM User with Access Key and Secret Key
+    - AWS CLI  
     - Terraform  
-    - k3d  
-    - helm  
+    - Helm  
     - kubectl  
     - Python 3.11+  
 
-
-### Create a folder 'Task-API-Service' in your local and navigate to that directory
-
-cd Task-API-Service
-
-### Clone the repository
-
-git clone https://github.com/PoornimaN-Personal/Task-API-Service.git
-
-cd cd Task-API-Service
-
 ## Run Tests Locally
-
-### Install dependencies
-
+ - Open terminal
+ - Clone the repository
+```
+git clone https://github.com/PoornimaN-Personal/Task-API-Service.git
+```
+ - Move into project folder
+```
+cd Task-API-Service
+```
+ - Install dependencies
+```
 pip install -r src/requirements.txt
-
-### Run tests
-
+```
+ - Run Test
+```
 pytest -v
+```
+> ✔️ All tests should pass, and you’ll see a summary showing `3 passed` in the terminal.
 
-This will resturn "Passed" status for the test cases. you can tweek the code and make the testcase fail if you want to check.
 
-## Build & Run the API Using Docker
+## Build & Run the container Using Docker
 
-### Build the Docker image
-
+ - Build the Docker image
+```
 docker build -t task-api:latest .
-
-Check if the image created  
-docker images  
-
-###  Run the container
-
+```
+>  ✔️ This creates a Docker image named `task-api:latest` using the Dockerfile in the project root.
+> 
+>  ✔️   Run `docker images` to confirm the image was created. 
+- Run the container
+```
 docker run -p 8000:8000 task-api:latest
+```
+> ✔️ This starts the container and maps port `8000` on your machine to port `8000` inside the container.
+- Verify the container is running
+```
+docker ps
+```
+> ✔️ You should see `task-api` listed as an active container
 
-If you want your application to run with custom port (for ex: 9000)  
+## Test the application
 
-docker run -p 9000:9000 -e APP_PORT=9000 task-api
+- Open your browser and access the below url
+```
+http://localhost:8000/tasks
+```
+- Expected response:
+```
+[]
+```
+> ✔️ Once the app is running, open `http://localhost:8000/docs` to access the FastAPI Swagger UI. Use it to test the GET and POST endpoints interactively.
 
+### API Testing with FastAPI SwaggerUI
+ - Navigate to
+```
+   http://localhost:8000/docs
+```
+ - Test the GET endpoint
+      - Expand the `GET /tasks` operation.
+      - Click **Try it out → Execute**
+      - ✔️ You should see a response with the current list of tasks (initially empty)
+  - Test the POST endpoint
+      - Expand the `POST /tasks` operation.
+      - Click **Try it out** and provide a JSON body, for example:
+      ```
+        {
+            "title": "Sample Task",
+            "done": "false"
+        }
+      ```
+      - Click **Execute.**
+      - ✔️ You should see the created task returned in the response.
+- Verify GET again
+    - Re‑run the `GET /tasks` request.
+    - ✔️ The list should now include the task you just created.
 
-### Validation
- http://localhost:8000/tasks
+### To run the application on a custom port, use 
+```
+docker run -p <port>:<port> -e APP_PORT=<port> task-api
+```
+> You should be able to access the application using `http://localhost:8000/tasks`
+>
+> Repeat the API testing at `http://localhost:<port>/docs`
 
- ### Expected:
- 
-•	/tasks returns []
+> [!Note]
+> After testing, stop and remove the container with `docker stop` and `docker rm`, then remove the image with `docker rmi` to free up space.
 
-👉 http://localhost:8000/docs
-
-•	/docs opens Swagger UI
-
-You can test POST endpointss by posting few values and then try to see the values with GET endpoints
-
-Now if you access 👉 http://localhost:8000/tasks , you can see the list which you have posted via Swagger UI
 
 ## GitHub CI Validation:
 
-Assumption:
-create one test repository and push the code from your local to GIT.   
-As per CI.yaml file , the workflow will get triggered automatically upon push/pull request.  
-git remote set-url origin https://github.com/MathanrajN/TestEKS.git  
+-  Create a test repository in your Git account
+-  Push this project’s code into that repository using below git commands
+```
+git remote set-url origin https://github.com/<your-username>/<repo-name>.git  
 git branch -M main  
 git push -u origin main  
+```
+> This PUSH request to the main brabch will automatically trigger workflow.
+> It will:
+> - ✅ Run unit tests with pytest
+> - ✅ Build the Docker image
+> - ✅ Publish the image to GHCR
+- Viewing Results  
+  - Go to the **Actions** tab in your GitHub repository.
+  - Select the latest workflow run to see logs for each step.
+  - > ✔️ You will see tests passed, image built, and published to GHCR
+  - Go to **Package** tab on you GitHub account
+  - > ✔️ You should see your Docker image with the name `task-api` listed  
 
-This PUSH request will automatically trigger workflow and it will test, build and push the package to GHCR.  
-Go to Actions --> You can see the workflow is running. Once it is finished    
-Go to Package --> Chack if A new image with the name "task-api" is available  
-
-### Note: Ensure that you have write permission to write package   
-
-Settings --> Actions --> general --> Workflow Permission  
-Enable Read & Write permissions 
+> [!Note]
+> In case if workflow fails, then please enssure you have write permission to write package  
+> Go to **Settings --> Actions --> general --> Workflow Permission**    
+> Then **Enable Read & Write permissions**
 
 ## Terraform to deploy application 
 
