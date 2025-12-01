@@ -144,11 +144,11 @@ git remote set-url origin https://github.com/<your-username>/<repo-name>.git
 git branch -M main  
 git push -u origin main  
 ```
-> This PUSH request to the main brabch will automatically trigger workflow.
-> It will:
->  ✅ Run unit tests with pytest
->  ✅ Build the Docker image
->  ✅ Publish the image to GHCR
+> This PUSH request to the main branch will automatically trigger workflow.  
+> It will:  
+>  ✅ Run unit tests with pytest  
+>  ✅ Build the Docker image  
+>  ✅ Publish the image to GHCR  
 - Viewing Results  
   - Go to the **Actions** tab in your GitHub repository.
   - Select the latest workflow run to see logs for each step.
@@ -288,6 +288,7 @@ kubectl port-forward svc/task-api <port>:8000 -n task-api
 ### Terraform destroy
  - After completing validation and testing, it’s important to clean up resources to avoid unnecessary costs.
 ```
+terraform state rm kubernetes_namespace.taskapi
 terraform destroy
 ```
 - Type yes when prompted.  
