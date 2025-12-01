@@ -166,15 +166,6 @@ Navigate to terraform folder where we have the configuration files
   terraform apply --auto-approve  
 ```
 > ✔️ This provisions the AWS EKS cluster and deploys the application.
-Terraform will:
-Phase 1
-✔ Create cluster 
-✔ read the cluster
-✔ write the kubeconfig file
-Phase 2
-✔ Create namespace task-api
-✔ Deploy Helm chart
-✔ Apply your image which you have pushed to GHCR already through workflow)
 
 ### Validation:
 Once cluster is created
