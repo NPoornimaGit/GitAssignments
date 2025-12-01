@@ -128,37 +128,44 @@ git push -u origin main
 > - Go to **Settings --> Actions --> General --> Workflow Permission**    
 > - [x] **Enable Read & Write permissions**
 
-## Terraform to deploy application 
+## Terraform to deploy app  
 
-Terraform configuration will do the following,
+Terraform configuration will do the following,  
 
-● Provision eks Kubernetes cluster.
-● Create a dedicated namespace for the application.
-● Deploy the application using the Terraform Helm provider.
+● Provision EKS Kubernetes cluster.  
+● Create a dedicated namespace for the application.  
+● Deploy the application using the Terraform Helm provider.  
 
-Navigate to terraform folder where we have the configuration files
+Navigate to terraform folder where we have the configuration files  
+```
+  cd Task-API-Servic/terraform
+```
+- Configure AWS Account on local machine:
+    - Install AWS CLI  
+    - Open terminal(linux/mac)/command prompt(windows)  
+    - Run `aws configure`  
+    - Provide the access key, secret key and region as requested
+- Navigate to terraform folder where we have the configuration files
 
-cd Task-API-Servic/terraform
+```
+  cd Task-API-Service/terraform
+```
+- Initialize Terraform
+```
+  terraform init
+```
+> ✔️ Downloads required providers and initializes the working directory
+- Review the execution plan
+```
+  terraform plan 
+```
+> ✔️ Shows what resources will be created/modified
 
-### COnfigure AWS Account 
-aws configure
-
-give your access key and secret key details
-
-### Apply terraform
-
-terraform init  
-
-When Terraform loads providers (Kubernetes/Helm), it needs kubeconfig at init time.  
-But the kubeconfig file is only created after the cluster exists.  
-So we should follow 2-phase terraform apply
-1. Phase 1 → cluster comes up & kubeconfig file is created  
-Phase 2 → providers can use the kubeconfig
-
-terraform apply -target="k3d_cluster.taskapi" -target="data.k3d_cluster.taskapi" -target="local_file.kubeconfig"  
-
-terraform apply --auto-approve
-
+- Apply the configuration
+```
+  terraform apply --auto-approve  
+```
+> ✔️ This provisions the AWS EKS cluster and deploys the application.
 Terraform will:
 Phase 1
 ✔ Create cluster 
