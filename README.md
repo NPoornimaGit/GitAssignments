@@ -6,7 +6,7 @@
     - Docker Desktop - **Must be installed and Running**
     - Git
     - AWS Account
-    - IAM User with Access Key and Secret Key
+    - IAM User with Access Key and Secret Key -**admin‑level or equivalent permissions for EKS + VPC + IAM + Helm**
     - AWS CLI  
     - Terraform  
     - Helm  
@@ -113,9 +113,9 @@ git push -u origin main
 ```
 > This PUSH request to the main brabch will automatically trigger workflow.
 > It will:
-> - ✅ Run unit tests with pytest
-> - ✅ Build the Docker image
-> - ✅ Publish the image to GHCR
+>  ✅ Run unit tests with pytest
+>  ✅ Build the Docker image
+>  ✅ Publish the image to GHCR
 - Viewing Results  
   - Go to the **Actions** tab in your GitHub repository.
   - Select the latest workflow run to see logs for each step.
@@ -136,7 +136,7 @@ Terraform configuration will do the following,
 ● Create a dedicated namespace for the application.  
 ● Deploy the application using the Terraform Helm provider.  
 
-Navigate to terraform folder where we have the configuration files  
+- Navigate to terraform folder where we have the configuration files  
 ```
   cd Task-API-Servic/terraform
 ```
@@ -144,18 +144,21 @@ Navigate to terraform folder where we have the configuration files
     - Install AWS CLI  
     - Open terminal(linux/mac)/command prompt(windows)  
     - Run `aws configure`  
-    - Provide the access key, secret key and region as requested
-- Navigate to terraform folder where we have the configuration files
+    - Provide the access key, secret key and region as requested   
+      
+> [!Important]
+> The IAM account used must have permissions to create and manage AWS EKS clusters, VPCs, subnets, IAM roles/policies, and to deploy applications via the Helm provider.
 
+- Navigate to terraform folder where we have the configuration files.  
 ```
   cd Task-API-Service/terraform
 ```
-- Initialize Terraform
+- Initialize Terraform  
 ```
   terraform init
 ```
-> ✔️ Downloads required providers and initializes the working directory
-- Review the execution plan
+> ✔️ Downloads required providers and initializes the working directory.
+- Review the execution plan  
 ```
   terraform plan 
 ```
@@ -166,56 +169,64 @@ Navigate to terraform folder where we have the configuration files
   terraform apply --auto-approve  
 ```
 > ✔️ This provisions the AWS EKS cluster and deploys the application.
+- Configure kubectl for EKS Cluster
+    - Once the EKS cluster is successfully created, you need to update your local kubeconfig so that `kubectl` can connect to it:
+    ```
+    aws eks update-kubeconfig --name taskapi-cluster --region <region> 
+    ```
 
 ### Validation:
-Once cluster is created
+After configuring kubeconfig and deploying the application with Helm, run the following commands to validate the setup:  
 
-aws eks update-kubeconfig --name taskapi-cluster --region ap-southeast-2 
-✅ 1. Validate the Kubernetes Cluster
-Run:
+✅ Check the Cluster Info
+```
 kubectl cluster-info
+```
+> ✔️ Confirms that your `kubectl` is connected to the correct cluster.
 
+✅ List nodes
+```
 kubectl get nodes
+```
+> ✔️ Worker nodes should appear with status `Ready`.
 
-Expected:
-•	1 server + 1 agent node (or whatever you configured)
-•	Status: Ready
-
-✅ 2. Confirm Namespace Exists
+✅ List Namespaces 
+```
 kubectl get ns
-You should see:
-task-api
+```
+> ✔️ Confirms that the `task-api` namespace exists.
 
-✅ 3. Check Helm Release
+✅ Check Helm Release
+```
 helm list -n task-api
-Expected output:
-NAME      	NAMESPACE 	REVISION	STATUS  	CHART
-taskapi   	task-api  	1       	deployed	taskapi-0.1.0
+```
+> ✔️ Shows the Helm release deployed in the `task-api` namespace.
 
-✅ 4. Validate Deployment
-kubectl get deployments -n task-api
-kubectl describe deployment taskapi -n task-api
-Expected:
-•	Deployment should show AVAILABLE = 1
-
-✅ 5. Validate Pod is Running
+✅ List Pods 
+```
 kubectl get pods -n task-api
-Expected:
-taskapi-xxxxxx   Running
-If Running → success 🎉
+```
+>  ✔️ Pods should be in `Running` state.
 
-✅ 6. Validate Service
+✅ List Services
+```
 kubectl get svc -n task-api
-You should see a ClusterIP service:
-taskapi   ClusterIP   10.x.x.x   <none>        8000/TCP
-Since it is ClusterIP, it is internal only.
-To test the API, you must port-forward.
+```
+>  ✔️ Confirms that the Kubernetes Service is created and exposing the application using `ClusterIP`
 
-✅ 7. Test the API via Port Forward
-Run:
+> [!Note]
+  > Since it is ClusterIP, it is internal only.  
+  > Use  `kubectl port-forward ` to expose the service locally and test endpoints configuring ingress.  
+
+✅ Test the API via Port Forward
+```
 kubectl port-forward svc/task-api 8000:8000 -n task-api
+```
+> ✔️ This maps port 8000 on your local machine to port 8000 inside the cluster
 
-To test it using different custom port,
+Follow the [Test the application](#test-the-application) section to do the complete validation.
+
+✅ Test the API via Port Forward
 
 kubectl port-forward svc/task-api 9000:8000 -n task-api
 
