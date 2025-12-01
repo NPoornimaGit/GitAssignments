@@ -66,7 +66,7 @@ http://localhost:8000/tasks
 ```
 > ✔️ Once the app is running, open `http://localhost:8000/docs` to access the FastAPI Swagger UI. Use it to test the GET and POST endpoints interactively.
 
-### API Testing with FastAPI SwaggerUI
+  #### API Testing with FastAPI SwaggerUI
  - Navigate to
 ```
    http://localhost:8000/docs
@@ -90,7 +90,7 @@ http://localhost:8000/tasks
     - Re‑run the `GET /tasks` request.
     - ✔️ The list should now include the task you just created.
 
-### To run the application on a custom port, use 
+  #### To run the application on a custom port, use 
 ```
 docker run -p <port>:<port> -e APP_PORT=<port> task-api
 ```
@@ -169,8 +169,9 @@ Terraform configuration will do the following,
   terraform apply --auto-approve  
 ```
 > ✔️ This provisions the AWS EKS cluster and deploys the application.
-- Configure kubectl for EKS Cluster
-    - Once the EKS cluster is successfully created, you need to update your local kubeconfig so that `kubectl` can connect to it:
+- Configure kubectl for EKS Cluster  
+   Once the EKS cluster is successfully created, you need to update your local kubeconfig so that `kubectl` can connect to it:
+  
     ```
     aws eks update-kubeconfig --name taskapi-cluster --region <region> 
     ```
@@ -224,16 +225,20 @@ kubectl port-forward svc/task-api 8000:8000 -n task-api
 ```
 > ✔️ This maps port 8000 on your local machine to port 8000 inside the cluster
 
-Follow the [Test the application](#test-the-application) section to do the complete validation.
 
-✅ Test the API via Port Forward
+### Follow the [Test the application](#test-the-application) section to do the complete validation.
 
-kubectl port-forward svc/task-api 9000:8000 -n task-api
+✅ To Test using different port 
 
+kubectl port-forward svc/task-api <port>:8000 -n task-api
 
-## Terraform destroy
-
+### Terraform destroy
+ - After completing validation and testing, it’s important to clean up resources to avoid unnecessary costs.
+```
 terraform destroy
+```
+- Type yes when prompted.  
+> ✔️ This command will remove all AWS resources created by your Terraform configuration (EKS cluster, VPC, subnets,helm deployment etc.)
 
 ## Helm Configuration Explanation
 
