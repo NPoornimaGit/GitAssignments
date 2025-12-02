@@ -135,9 +135,9 @@ docker run -p <port>:<port> -e APP_PORT=<port> task-api
 -  Create a test repository in your Git account
 -  Push this project’s code into that repository using below git commands
 ```
-git remote set-url origin https://github.com/<your-username>/<repo-name>.git  
-git branch -M main  
-git push -u origin main  
+git remote set-url origin https://github.com/<your-username>/<repo-name>.git 
+git branch -M main
+git push -u origin main
 ```
 > This PUSH request to the main branch will automatically trigger workflow.  
 > It will:  
@@ -179,7 +179,7 @@ Terraform configuration will do the following,
 
 - Navigate to terraform folder where we have the configuration files  
 ```
-  cd Task-API-Servic/terraform
+  cd terraform
 ```
 - Configure AWS Account on local machine:
     - Install AWS CLI  
@@ -190,10 +190,6 @@ Terraform configuration will do the following,
 > [!Important]
 > The IAM account used must have permissions to create and manage AWS EKS clusters, VPCs, subnets, IAM roles/policies, and to deploy applications via the Helm provider.
 
-- Navigate to terraform folder where we have the configuration files.  
-```
-  cd Task-API-Service/terraform
-```
 - Review and Update `terraform.tfvars` file - **Optional**
     - This file contains project‑specific variables such as  `aws_region`   `cluster_name`   `namespace`
       
