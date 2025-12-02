@@ -8,8 +8,7 @@
     - The application is exposed internally using a ClusterIP service type.  
     - ClusterIP services are not externally accessible unless you use `kubectl port-forward` or configure an ingress/load balancer.  
 - **Container image availability**  
-    - The Docker image is assumed to be publicly accessible (via GHCR
-    - ).  
+    - The Docker image is assumed to be publicly accessible (via GHCR).  
     - Private registry authentication is not covered in this setup.  
 - **Terraform state management**  
     - Terraform state files are stored locally.  
