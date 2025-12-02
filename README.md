@@ -81,7 +81,11 @@ docker build -t task-api:latest .
 docker run -p 8000:8000 task-api:latest
 ```
 > ✔️ This starts the container and maps port `8000` on your machine to port `8000` inside the container.
-
+- Verify the container is running
+```
+docker ps
+```
+> ✔️ You should see `task-api` listed as an active container
 ## Test the application
 
 - Open your browser and access the below url
