@@ -199,18 +199,18 @@ Terraform configuration will do the following,
         - For Example `ghcr.io/<your-git-username>/task-api`
 - Initialize Terraform  
 ```
-  terraform init
+terraform init
 ```
 > ✔️ Downloads required providers and initializes the working directory.
 - Review the execution plan  
 ```
-  terraform plan 
+terraform plan 
 ```
 > ✔️ Shows what resources will be created/modified
 
 - Apply the configuration
 ```
-  terraform apply --auto-approve  
+terraform apply --auto-approve  
 ```
 > ✔️ This provisions the AWS EKS cluster and deploys the application.
 - Configure kubectl for EKS Cluster  
