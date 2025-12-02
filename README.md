@@ -204,20 +204,20 @@ terraform init
 > ✔️ Downloads required providers and initializes the working directory.
 - Review the execution plan  
 ```
-terraform plan 
+terraform plan
 ```
 > ✔️ Shows what resources will be created/modified
 
 - Apply the configuration
 ```
-terraform apply --auto-approve  
+terraform apply --auto-approve
 ```
 > ✔️ This provisions the AWS EKS cluster and deploys the application.
 - Configure kubectl for EKS Cluster  
    Once the EKS cluster is successfully created, you need to update your local kubeconfig so that `kubectl` can connect to it:
   
     ```
-    aws eks update-kubeconfig --name taskapi-cluster --region <region> 
+    aws eks update-kubeconfig --name taskapi-cluster --region <region>
     ```
 
 ### Validation:
@@ -273,8 +273,9 @@ kubectl port-forward svc/task-api 8000:8000 -n task-api
 ### Follow the [Test the application](#test-the-application) section to do the complete validation.
 
 ✅ To Test using different port 
-
+```
 kubectl port-forward svc/task-api <port>:8000 -n task-api
+```
 
 ### Terraform destroy
  - After completing validation and testing, it’s important to clean up resources to avoid unnecessary costs.
