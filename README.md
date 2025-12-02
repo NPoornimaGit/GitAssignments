@@ -1,20 +1,5 @@
 # Task API — Kubernetes Deployment with Terraform + Helm
 
-## Assumptions & Limitations
-
-- **Tasks are stored in memory only**    
-   - No database persistence is implemented. All tasks will be lost when the application restarts.  
-- **Service exposure**  
-    - The application is exposed internally using a ClusterIP service type.  
-    - ClusterIP services are not externally accessible unless you use `kubectl port-forward` or configure an ingress/load balancer.  
-- **Container image availability**  
-    - The Docker image is assumed to be publicly accessible (via GHCR).  
-    - Private registry authentication is not covered in this setup.  
-- **Terraform state management**  
-    - Terraform state files are stored locally.  
-    - No remote backend configuration (e.g., S3 + DynamoDB) is included in this project.  
-    - This means state is not shared across team members and must be managed manually.  
-
 ## Design Decisions
  - **FastAPI:**
      - High Performance
@@ -29,7 +14,22 @@
      - Easiest when compared to Docker Hub
      - No Extra accounts or Secrets needed.
      - Built-in authentication using ${{ secrets.GITHUB_TOKEN }}
-       
+
+## Assumptions & Limitations
+
+- **Tasks are stored in memory only**    
+   - No database persistence is implemented. All tasks will be lost when the application restarts.  
+- **Service exposure**  
+    - The application is exposed internally using a ClusterIP service type.  
+    - ClusterIP services are not externally accessible unless you use `kubectl port-forward` or configure an ingress/load balancer.  
+- **Container image availability**  
+    - The Docker image is assumed to be publicly accessible (via GHCR).  
+    - Private registry authentication is not covered in this setup.  
+- **Terraform state management**  
+    - Terraform state files are stored locally.  
+    - No remote backend configuration (e.g., S3 + DynamoDB) is included in this project.  
+    - This means state is not shared across team members and must be managed manually.
+             
 ## Prerequisites
 
  - Before you begin, make sure the following tools are installed and available:  
@@ -195,14 +195,14 @@ Terraform configuration will do the following,
 > The IAM account used must have permissions to create and manage AWS EKS clusters, VPCs, subnets, IAM roles/policies, and to deploy applications via the Helm provider.
 
 - Review and Update `terraform.tfvars` file - 
-    - This file contains project‑specific variables such as  `aws_region`   `cluster_name`   `namespace`
-    - Please update `aws_region` with the same value which you used while running  `aws configure`
+    - This file contains project‑specific variables as follows:
+    -  `aws_region` - Update it with the same value which you used while running  `aws configure`
     -  `cluster_name`  and  `namespace` - If you want you can update it with different values or else leave it as is.
-      
-- Review and Update `values_override.yaml.tpl` file - **Optional**
-    - By default it will pick up the image from the repository `ghcr.io/poorniman-personal/task-api`
-    - You can update `${image_repo}` and `${image_tag}`  with the image which we published to GHCR in the [GitHub CI Validation](#github-ci-validation) section
-        - For Example `ghcr.io/<your-git-username>/task-api`
+    -  `image_repo`  and  `image_tag`
+        -    If you want you can update it with image which we published to GHCR in the [GitHub CI Validation](#github-ci-validation) section.
+        -    In case if you are  updating `image_repo` in `terraform.tfvars` file it should be in the format `ghcr.io/<your-git-username in lowercase>/task-api`
+        -    You should pass your git username in lowercase or else the pod will fail with `InvalidImage` error.
+
 - Initialize Terraform  
 ```
 terraform init
@@ -297,15 +297,15 @@ terraform destroy
 ## Use of AI
  - Copilot and ChatGPT were used to assist with FastAPI, Pytest, and Helm chart code and and troubleshooting issues.  
    - **Reason for use**  
-      - These technologies were new to me, so I leveraged AI for learning and to generate a base scaffolding of code and configuration  
-      - However, I did not completely depend on AI — instead, I first studied the concepts through official documentation and YouTube tutorials, then refined and updated            the AI‑generated output.  
+      - These technologies (FastAPI, Pytest) were new to me, so I leveraged AI for learning and to generate a base scaffolding of code and configuration  
+      - However, I did not completely depend on AI — instead, I first studied the concepts through official documentation and YouTube tutorials, then refined and updated the AI‑generated output.  
    - **What went well?**  
       - Saved time by quickly identifying root causes of errors such as EKS authentication and kubeconfig issues, provider configuration errors.  
       - Provided structured explanations with the reason for the error and step‑by‑step fixes that reduced trial‑and‑error time.  
    - **Manual Changes Required?**  
       - Although AI provided initial drafts, all output required manual refinement, including:  
-          - The GET /tasks endpoint was updated to include an ID field for each task, based on insights from a YouTube tutorial.  
-          - Updated Helm chart paths and value file and yaml files references to match the out project  requirement.  
+          - The GET /tasks endpoint was updated to include an ID field for each task.  
+          - Updated Helm chart paths and value file and yaml files references to match our project  requirement.  
     - **How did you verify the AI output?**  
          - Verified the output by running commands like `pytest` `terraform` `kubectl` locally  
          - Validated the cluster health and deployments by follwing the steps mentioned in [Validation](#validation)  
