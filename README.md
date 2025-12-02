@@ -283,6 +283,8 @@ kubectl port-forward svc/task-api <port>:8000 -n task-api
  - After completing validation and testing, it’s important to clean up resources to avoid unnecessary costs.
 ```
 terraform state rm kubernetes_namespace.taskapi
+```
+```
 terraform destroy
 ```
 - Type yes when prompted.  
