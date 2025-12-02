@@ -190,8 +190,10 @@ Terraform configuration will do the following,
 > [!Important]
 > The IAM account used must have permissions to create and manage AWS EKS clusters, VPCs, subnets, IAM roles/policies, and to deploy applications via the Helm provider.
 
-- Review and Update `terraform.tfvars` file - **Optional**
+- Review and Update `terraform.tfvars` file - 
     - This file contains project‑specific variables such as  `aws_region`   `cluster_name`   `namespace`
+    - Please update `aws_region` with the same value which you used while running  `aws configure`
+    -  `cluster_name`  and  `namespace` - If you want you can update it with different values or else leave it as is.
       
 - Review and Update `values_override.yaml.tpl` file - **Optional**
     - By default it will pick up the image from the repository `ghcr.io/poorniman-personal/task-api`
