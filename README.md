@@ -290,8 +290,35 @@ terraform destroy
 - Type yes when prompted.  
 > ✔️ This command will remove all AWS resources created by your Terraform configuration (EKS cluster, VPC, subnets,helm deployment etc.)
 
-
 ## Use of AI
+ - Copilot and ChatGPT were used to assist with FastAPI, Pytest, and Helm chart code and and troubleshooting issues.  
+   - **Reason for use**  
+      - These technologies were new to me, so I leveraged AI for learning and to generate a base scaffolding of code and configuration  
+      - However, I did not completely depend on AI — instead, I first studied the concepts through official documentation and YouTube tutorials, then refined and updated            the AI‑generated output.  
+   - **What went well?**  
+      - Saved time by quickly identifying root causes of errors such as EKS authentication and kubeconfig issues, provider configuration errors.  
+      - Provided structured explanations with the reason for the error and step‑by‑step fixes that reduced trial‑and‑error time.  
+   - **Manual Changes Required?**  
+      - Although AI provided initial drafts, all output required manual refinement, including:  
+          - The GET /tasks endpoint was updated to include an ID field for each task, based on insights from a YouTube tutorial.  
+          - Updated Helm chart paths and value file and yaml files references to match the out project  requirement.  
+    - **How did you verify the AI output?**  
+         - Verified the output by running commands like `pytest` `terraform` `kubectl` locally  
+         - Validated the cluster health and deployments by follwing the steps mentioned in [Validation](#validation)  
+
+## References:
+- [FastAPI Document](https://fastapi.tiangolo.com/)  
+- [FastAPI Tutorial](https://www.youtube.com/watch?v=rvFsGRvj9jo)  
+- [Pytest](https://docs.pytest.org/en/stable/example/)  
+- [pytest Tutorial](https://www.youtube.com/watch?v=7dgQRVqF1N0&list=LL&index=1)  
+- [GithubCI](https://docs.github.co)  
+- [TerraformEKS](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest)   
+- [TerraformKubernetes](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs)  
+- [TerraformHelm](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs)  
+
+
+
+
 
 
 
