@@ -310,7 +310,7 @@ terraform destroy
 - [FastAPI Document](https://fastapi.tiangolo.com/)  
 - [FastAPI Tutorial](https://www.youtube.com/watch?v=rvFsGRvj9jo)  
 - [Pytest](https://docs.pytest.org/en/stable/example/)  
-- [pytest Tutorial](https://www.youtube.com/watch?v=7dgQRVqF1N0&list=LL&index=1)  
+- [Pytest Tutorial](https://www.youtube.com/watch?v=7dgQRVqF1N0&list=LL&index=1)  
 - [GithubCI](https://docs.github.co)  
 - [TerraformEKS](https://registry.terraform.io/modules/terraform-aws-modules/eks/aws/latest)   
 - [TerraformKubernetes](https://registry.terraform.io/providers/hashicorp/kubernetes/latest/docs)  
