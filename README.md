@@ -122,7 +122,7 @@ http://localhost:8000/tasks
 ```
 docker run -p <port>:<port> -e APP_PORT=<port> task-api
 ```
-> You should be able to access the application using `http://localhost:8000/tasks`
+> You should be able to access the application using `http://localhost:<port>/tasks`
 >
 > Repeat the API testing at `http://localhost:<port>/docs`
 
